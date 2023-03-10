@@ -1,10 +1,11 @@
 package com.udemy.demo.book;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.constraints.Size;
 import java.util.Arrays;
 
 @RestController

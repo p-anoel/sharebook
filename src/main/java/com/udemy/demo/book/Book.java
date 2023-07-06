@@ -24,7 +24,7 @@ public class Book {
     @ManyToOne
     private User user;
 
-    private BookStatus bookStatus;
+    private BookStatus status;
 
     private boolean deleted;
 

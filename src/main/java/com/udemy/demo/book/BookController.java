@@ -1,22 +1,33 @@
 package com.udemy.demo.book;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.constraints.Size;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 public class BookController {
+    @Autowired
+    private BookRepository bookRepository;
     @GetMapping(value = "/books")
-    public ResponseEntity listBooks(){
-        Book book = new Book();
-        book.setTitle("Tintin");
-        book.setCategory(new Category("BD"));
+    public ResponseEntity listBooks(@RequestParam(required = false) BookStatus status){
+        Integer userConnectedId = this.getUserConnectedId();
+        List<Book> books;
+        if (status == BookStatus.FREE){
+            books = bookRepository.findByStatusAndUserIdNotAndDeletedFalse(status, userConnectedId);
+        }else {
+            books = bookRepository.findByUserIdAndDeletedFalse(userConnectedId);
+        }
+        return new ResponseEntity(books, HttpStatus.OK);
+    }
 
-        return new ResponseEntity(Arrays.asList(book), HttpStatus.OK);
+    private Integer getUserConnectedId() {
+        return 1;
     }
 
     @PostMapping(value = "/books")
@@ -36,7 +47,7 @@ public class BookController {
 
     @GetMapping(value = "/categories")
     public ResponseEntity listCategories(){
-        Category category = new Category("BD");
+        Category category = new Category(1, "BD");
         return new ResponseEntity(Arrays.asList(category), HttpStatus.OK);
     }
 }

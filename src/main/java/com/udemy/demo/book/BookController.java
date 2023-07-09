@@ -1,5 +1,7 @@
 package com.udemy.demo.book;
 
+import com.udemy.demo.borrow.Borrow;
+import com.udemy.demo.borrow.BorrowRepository;
 import com.udemy.demo.user.User;
 import com.udemy.demo.user.UserRepository;
 import jakarta.validation.Valid;
@@ -20,6 +22,9 @@ public class BookController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BorrowRepository borrowRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -68,6 +73,20 @@ public class BookController {
 
     @DeleteMapping(value = "/books/{bookId}")
     public ResponseEntity deleteBook(@PathVariable("bookId") String bookId){
+        Optional<Book> bookToDelete = bookRepository.findById(Integer.valueOf(bookId));
+        if(bookToDelete.isEmpty()){
+            return new ResponseEntity("Book not found", HttpStatus.BAD_REQUEST);
+        }
+        Book book = bookToDelete.get();
+        List<Borrow> borrows = borrowRepository.findByBookId(book.getId());
+        for (Borrow borrow : borrows){
+            if (borrow.getCloseDate() == null){
+                User borrower = borrow.getBorrower();
+                return new ResponseEntity(borrower, HttpStatus.CONFLICT);
+            }
+        }
+        book.setDeleted(true);
+        bookRepository.save(book);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

@@ -92,7 +92,20 @@ public class BookController {
 
     @PutMapping(value = "/books/{bookId}")
     public ResponseEntity updateBook(@PathVariable("bookId") String bookId, @RequestBody Book book){
-        return new ResponseEntity(HttpStatus.OK);
+
+        Optional<Book> bookToUpdate = bookRepository.findById(Integer.valueOf(bookId));
+
+        if (bookToUpdate.isEmpty()){
+            return new ResponseEntity("Book not existing", HttpStatus.BAD_REQUEST);
+        }
+
+        Book bookToSave = bookToUpdate.get();
+
+        Optional<Category> newCategory = categoryRepository.findById(bookToSave.getCartegoryId());
+        bookToSave.setCategory(newCategory.get());
+        bookToSave.setTitle(book.getTitle());
+
+        return new ResponseEntity(bookToSave,  HttpStatus.OK);
     }
 
     @GetMapping(value = "/categories")

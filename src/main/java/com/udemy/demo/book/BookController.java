@@ -110,8 +110,7 @@ public class BookController {
 
     @GetMapping(value = "/categories")
     public ResponseEntity listCategories(){
-        Category category = new Category(1, "BD");
-        return new ResponseEntity(Arrays.asList(category), HttpStatus.OK);
+        return new ResponseEntity(categoryRepository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/books/{bookId}")

@@ -31,7 +31,7 @@ public class BookController {
 
     @GetMapping(value = "/books")
     public ResponseEntity listBooks(@RequestParam(required = false) BookStatus status){
-        Integer userConnectedId = this.getUserConnectedId();
+        Integer userConnectedId = getUserConnectedId();
         List<Book> books;
         if (status == BookStatus.FREE){
             books = bookRepository.findByStatusAndUserIdNotAndDeletedFalse(status, userConnectedId);
@@ -48,7 +48,7 @@ public class BookController {
     @PostMapping(value = "/books")
     public ResponseEntity addBook(@Valid @RequestBody Book book){
 
-        Integer userConnectedId = this.getUserConnectedId();
+        Integer userConnectedId = getUserConnectedId();
         Optional<User> user = userRepository.findById(userConnectedId);
         Optional<Category> category = categoryRepository.findById(book.getCartegoryId());
 

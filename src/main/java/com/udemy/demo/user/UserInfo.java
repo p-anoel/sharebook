@@ -16,7 +16,7 @@ import jakarta.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+public class UserInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class User {
     private String lastName;
     private String password;
 
-    public User(String email) {
+    public UserInfo(String email) {
         this.email = email;
     }
 }

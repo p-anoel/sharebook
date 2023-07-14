@@ -2,7 +2,7 @@ package com.udemy.demo.book;
 
 import com.udemy.demo.borrow.Borrow;
 import com.udemy.demo.borrow.BorrowRepository;
-import com.udemy.demo.user.User;
+import com.udemy.demo.user.UserInfo;
 import com.udemy.demo.user.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.constraints.Size;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +47,7 @@ public class BookController {
     public ResponseEntity addBook(@Valid @RequestBody Book book){
 
         Integer userConnectedId = getUserConnectedId();
-        Optional<User> user = userRepository.findById(userConnectedId);
+        Optional<UserInfo> user = userRepository.findById(userConnectedId);
         Optional<Category> category = categoryRepository.findById(book.getCartegoryId());
 
         if (category.isPresent()){
@@ -81,7 +79,7 @@ public class BookController {
         List<Borrow> borrows = borrowRepository.findByBookId(book.getId());
         for (Borrow borrow : borrows){
             if (borrow.getCloseDate() == null){
-                User borrower = borrow.getBorrower();
+                UserInfo borrower = borrow.getBorrower();
                 return new ResponseEntity(borrower, HttpStatus.CONFLICT);
             }
         }
@@ -118,10 +116,7 @@ public class BookController {
 
         Optional<Book> book = bookRepository.findById(Integer.valueOf(bookId));
 
-        if (!book.isPresent()){
-            return new ResponseEntity("Book not found", HttpStatus.BAD_REQUEST);
-        }
+        return book.map(value -> new ResponseEntity(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity("Book not found", HttpStatus.BAD_REQUEST));
 
-        return new ResponseEntity(book.get(), HttpStatus.OK);
     }
 }

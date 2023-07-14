@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.constraints.Size;
-
 import java.util.List;
 
 @RestController
@@ -19,9 +17,9 @@ public class UserController {
     UserRepository userRepository;
 
     @PostMapping(value = "/users")
-    public ResponseEntity addUser (@Valid @RequestBody User user){
+    public ResponseEntity addUser (@Valid @RequestBody UserInfo user){
 
-        List<User> users = userRepository.findByEmail(user.getEmail());
+        List<UserInfo> users = userRepository.findByEmail(user.getEmail());
 
         if (!users.isEmpty()){
             return new ResponseEntity("User already existing !", HttpStatus.BAD_REQUEST);

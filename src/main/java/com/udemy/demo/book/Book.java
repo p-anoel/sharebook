@@ -1,8 +1,10 @@
 package com.udemy.demo.book;
 
-import com.udemy.demo.user.User;
+import com.udemy.demo.user.UserInfo;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +12,8 @@ import jakarta.validation.constraints.NotBlank;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +26,7 @@ public class Book {
     private Category category;
 
     @ManyToOne
-    private User user;
+    private UserInfo user;
 
     private BookStatus status;
 

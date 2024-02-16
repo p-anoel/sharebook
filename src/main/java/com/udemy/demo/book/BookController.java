@@ -8,8 +8,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +30,8 @@ public class BookController {
     private CategoryRepository categoryRepository;
 
     @GetMapping(value = "/books")
-    public ResponseEntity listBooks(@RequestParam(required = false) BookStatus status){
-        Integer userConnectedId = getUserConnectedId();
+    public ResponseEntity listBooks(@RequestParam(required = false) BookStatus status, Principal principal){
+        Integer userConnectedId = getUserConnectedId(principal);
         List<Book> books;
         if (status == BookStatus.FREE){
             books = bookRepository.findByStatusAndUserIdNotAndDeletedFalse(status, userConnectedId);
@@ -39,14 +41,20 @@ public class BookController {
         return new ResponseEntity(books, HttpStatus.OK);
     }
 
-    public static Integer getUserConnectedId() {
-        return 1;
+    public Integer getUserConnectedId(Principal principal) {
+        if (!(principal instanceof UsernamePasswordAuthenticationToken)){
+            throw new RuntimeException("User not found");
+        }
+        UsernamePasswordAuthenticationToken user = (UsernamePasswordAuthenticationToken) principal;
+        UserInfo oneByEmail = userRepository.findOneByEmail(user.getName());
+
+        return oneByEmail.getId();
     }
 
     @PostMapping(value = "/books")
-    public ResponseEntity addBook(@Valid @RequestBody Book book){
+    public ResponseEntity addBook(@Valid @RequestBody Book book, Principal principal){
 
-        Integer userConnectedId = getUserConnectedId();
+        Integer userConnectedId = getUserConnectedId(principal);
         Optional<UserInfo> user = userRepository.findById(userConnectedId);
         Optional<Category> category = categoryRepository.findById(book.getCartegoryId());
 

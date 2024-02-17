@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
+
     long JWT_VALIDITY = 5 * 60 * 60;
 
     private static final String AUTHORITIES_KEY = "sub";
@@ -31,6 +32,7 @@ public class JwtUtils {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
     }
+
     public String generateToken(Authentication authentication) {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()

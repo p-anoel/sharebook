@@ -33,5 +33,5 @@ public class Book {
     private boolean deleted;
 
     @Transient
-    private int cartegoryId;
+    private int categoryId;
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 @Repository
 public interface BorrowRepository extends CrudRepository<Borrow, Integer> {
+
     List<Borrow> findByBorrowerId(Integer borrowerId);
     List<Borrow> findByBookId(Integer bookId);
 

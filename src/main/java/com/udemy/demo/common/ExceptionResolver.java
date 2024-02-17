@@ -12,6 +12,7 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ExceptionResolver {
+
     @ExceptionHandler
     public ResponseEntity handleValidationExceptions(
             MethodArgumentNotValidException ex) {

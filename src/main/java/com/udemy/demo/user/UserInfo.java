@@ -23,7 +23,7 @@ public class UserInfo {
     private int id;
     private String email;
     @Size(min = 2, max = 25, message = "Le prenom doit faire entre 2 et 25 caractères")
-    private String fistName;
+    private String firstName;
     @Size(min = 2, max = 25, message = "Le nom doit faire entre 2 et 25 caractères")
     private String lastName;
     private String password;

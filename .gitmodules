@@ -1,0 +1,3 @@
+[submodule "frontend-sharebook"]
+	path = frontend-sharebook
+	url = https://gitlab.com/pnoel/frontend-sharebook.git
